@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <script src="js/script.js"></script>
+
+    <script>
+        let no = 0;
+        let score = 0;
+        let userAnswers = [];
+        let wordList =[
+            { 
+                japanese: "色相環で最も暖かい色はどれですか？", 
+                options: ["赤", "青", "緑", "黄色"], 
+                correct: "赤" },
+            { 
+                japanese: "色相環で最も冷たい色はどれですか？", 
+                options: ["青", "オレンジ", "赤", "紫"], 
+                correct: "青" },
+            { 
+                japanese: "下に示した色をより軟らかい印象にするための方法", 
+                options: ["明度を高くする", "色相を寒色系にする", "色相を中性色系にする", "彩度を高くする"], 
+                correct: "明度を高くする", 
+                image: "pink.png" },
+            { 
+                japanese: "色の膨張・収縮に関する印象に対して、強く影響を与える属性", 
+                options: ["色相", "明度", "彩度", "サチュレーション"], 
+                correct: "明度" },
+            { 
+                japanese: "フランス国旗の配色には、青は自由、白は平等、赤は博愛といった意味が込められている。このような色の心理的効果の名称", 
+                options: ["エーレンシュタイン効果", "色の象徴性", "リープマン効果", "主観色"], 
+                correct: "色の象徴性" },
+            { 
+                japanese: "光の三原色を答えなさい。", 
+                options: ["赤、青、緑", "黒、白、赤", "シアン、マゼンタ、イエロー", "赤、青、黄"], 
+                correct: "赤、青、緑" },
+            { 
+                japanese: "明度が最も高い色は？", 
+                options: ["黒", "白", "金", "黄色"], 
+                correct: "白" },
+            { 
+                japanese: "色の三属性を答えなさい。", 
+                options: ["色相、明度、彩度", "明度、補色、色素", "色相、明度、補色", "色彩、主観色、中間色"], 
+                correct: "色相、明度、彩度" },
+            { 
+                japanese: "色相環において補色にあたる色は何か？", 
+                options: ["補色", "同系色", "中性色系", "逆色"], 
+                correct: "補色" },
+            { 
+                japanese: "日本の伝統色で「桜色」はどの色に近いか？", 
+                options: ["ピンク", "白", "赤", "臙脂"], 
+                correct: "ピンク" },
+            { 
+                japanese: "画像は何のグラデーションか？", 
+                options: ["トーン", "明度", "色相", "彩度"], 
+                correct: "明度" , 
+                image: "iro_.jpeg" },
+        ];
+
+        
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        
+        function startQuiz() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("quizScreen").style.display = "block";
+            resetQuiz(); 
+            shuffle(wordList); 
+            showQuestion(); 
+        }
+
+       
+        function resetQuiz() {
+            no = 0;  
+            score = 0;  
+            userAnswers = [];  
+            document.getElementById("resultMessage").innerHTML = "";  
+            document.getElementById("resultImage").src = "";  
+            document.getElementById("answerForm").style.display = "block";  
+        }
+
+      
+        function showQuestion() {
+            let questionContainer = document.getElementById("question");
+            let answerForm = document.getElementById("answerForm");
+            let questionImage = document.getElementById("questionImage");
+            questionContainer.innerHTML = ""; 
+            answerForm.innerHTML = ""; 
+
+            if (no < wordList.length) {
+                let currentQuestion = wordList[no];
+                
+                questionContainer.innerHTML = currentQuestion.japanese;
+
+                if (currentQuestion.image) {
+                    questionImage.src = currentQuestion.image;
+                    questionImage.style.display = "block"; 
+                } else {
+                    questionImage.style.display = "none";
+                }
+
+                if (currentQuestion.options) {
+                    let shuffledOptions = shuffle(currentQuestion.options.slice()); 
+
+                    shuffledOptions.forEach((option, index) => {
+                        answerForm.innerHTML += `
+                            <input type="radio" name="answer" id="option${index}" value="${option}">
+                            <label for="option${index}">${option}</label><br>
+                        `;
+                    });
+                    answerForm.innerHTML += `<button onclick="judge(true)">OK</button>`;
+                } else {
+                    answerForm.innerHTML = `
+                        <input type="text" id="answer" placeholder="入力" onkeydown="handleKeyDown(event)">
+                        <button onclick="judge(false)">OK</button>
+                    `;
+                    
+                    setTimeout(() => {
+                        document.getElementById("answer").focus();
+                    }, 0);
+                }
+            } else {
+                displayResults();
+            }
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === "Enter") {
+                judge(false);
+            }
+        }
+
+
+        function judge(isChoice) {
+            let answer;
+            if (isChoice) {
+                let options = document.getElementsByName("answer");
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].checked) {
+                        answer = options[i].value;
+                    }
+                }
+            } else {
+                answer = document.getElementById("answer").value.trim();
+            }
+
+            let correctAnswer = isChoice ? wordList[no].correct : wordList[no].english[0]; 
+            userAnswers.push({
+                question: wordList[no].japanese,
+                userAnswer: answer || "未回答",
+                correctAnswer: correctAnswer,
+                image: wordList[no].image || null
+            });
+
+            if (isChoice) {
+                if (answer === wordList[no].correct) {
+                    alert("正解です！");
+                    score++;
+                } else {
+                    alert("残念！不正解です。");
+                }
+            } else {
+                let correctAnswers = wordList[no].english;
+                if (correctAnswers.includes(answer)) {
+                    alert("正解です！");
+                    score++;
+                } else {
+                    alert("残念！不正解です。");
+                }
+            }
+
+            no++;
+            showQuestion();
+        }
+
+      
+        function displayResults() {
+            let questionContainer = document.getElementById("question");
+            let answerForm = document.getElementById("answerForm");
+            let resultMessage = document.getElementById("resultMessage");
+
+            questionContainer.innerHTML = score + "/" + wordList.length + " 正解しました！";
+            answerForm.style.display = "none";
+
+            let resultHTML = "<h2>結果発表</h2>";
+            userAnswers.forEach((item, index) => {
+                let isCorrect = item.userAnswer === item.correctAnswer;
+                let backgroundColor = isCorrect ? "background-color: #ffffff;" : ""; 
+
+                resultHTML += `
+                    <div class="result-item" style="${backgroundColor}">
+                        <p><strong>問題 ${index + 1}:</strong> ${item.question}</p>
+                        <p>あなたの回答: ${item.userAnswer}</p>
+                        <p>正解: ${item.correctAnswer}</p>
+                `;
+                if (item.image) {
+                    resultHTML += `<img src="${item.image}" alt="問題画像" style="max-width: 80%; height: auto;"><br>`;
+                }
+                resultHTML += `<hr></div>`;
+            });
+            resultMessage.innerHTML = resultHTML;
+
+            let resultImage = document.getElementById("resultImage");
+            if (score == wordList.length) {
+                resultMessage.innerHTML += "<p>全問正解！よくできました！</p>";
+                resultImage.src = "gold.png";
+            } else if (score >= wordList.length * 0.6) {
+                resultMessage.innerHTML += "<p>惜しい！あともう一歩でした！</p>";
+                resultImage.src = "silver.png";
+            } else {
+                resultMessage.innerHTML += "<p>もう少しがんばりましょう。</p>";
+                resultImage.src = "bronze.png";
+            }
+
+           
+            resultMessage.innerHTML += `<button onclick="restartQuiz()">もう一度やり直す</button>`;
+        }
+
+      
+        function restartQuiz() {
+            document.getElementById("quizScreen").style.display = "none";
+            document.getElementById("startScreen").style.display = "block";
+        }
+    </script>
+</head>
+
+<body>
+
+  
+    <div id="startScreen">
+        <h1>色彩検定クイズ</h1>
+        <p>色彩検定２～３級レベルの問題が出題されます。
+            <br>準備ができたら、以下のボタンを押してクイズをスタートしてください！</p>
+        <button onclick="startQuiz()">スタート</button>
+    </div>
+
+ 
+    <div id="quizScreen" style="display:none;">
+        <h1>色彩検定クイズ</h1>
+        <div id="question"></div>
+        <img id="questionImage" src="" style="display:none; max-width:100%; height:auto;">
+        <div id="answerForm"></div>
+        <p id="resultMessage"></p>
+        <img id="resultImage" src="">
+    </div>
+
+</body>
+</html>

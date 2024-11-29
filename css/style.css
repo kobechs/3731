@@ -1,0 +1,114 @@
+body {
+    text-align: center;
+    background-color: #e6f7ff; 
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+h1 {
+    color: #ff6b81; 
+    font-size: 42px;
+    margin: 20px 0;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 2px 2px 0 rgba(255, 107, 129, 0.3);
+}
+
+#question {
+    width: 80%;
+    margin: 30px auto;
+    font-size: 24px;
+    padding: 30px;
+    background-color: #fff0f6; 
+    border-radius: 20px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ff6b81; 
+}
+
+#answerForm {
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+#answer {
+    width: 70%;
+    padding: 12px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 2px solid #ff6b81;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    padding: 12px 30px;
+    background-color: #ff6b81; 
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Pacifico', cursive;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #ff99a6; 
+    transform: scale(1.05);
+}
+
+#resultMessage h2 {
+    color: #ff6b81;
+    margin-top: 30px;
+    font-family: 'Pacifico', cursive;
+}
+
+.result-item {
+    background-color: #ffe6eb; 
+    padding: 20px;
+    margin: 15px auto;
+    border-radius: 15px;
+    border: 2px solid #ff6b81;
+    max-width: 90%;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+}
+
+.result-item p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #333;
+}
+
+#resultImage {
+    max-width: 150px;
+    margin-top: 30px;
+    animation: bounce 2s infinite;
+}
+
+#questionImage {
+    max-width: 60%;
+    height: auto;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ff99a6; 
+}
+
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+#resultMessage {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f2faff; 
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+    margin: auto;
+}
